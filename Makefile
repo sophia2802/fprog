@@ -1,20 +1,27 @@
-# Programme und Compiler-Definitionen
+# Compiler und Flags
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -O2
+
+# Targets
 TARGET = word_counter
-CXX = clang++               # C++ Compiler
-CXXFLAGS = -g -std=c++17 -Wall -lm
+SOURCES = main.cpp
+HEADERS = RedBlackTree.h
+OBJECTS = $(SOURCES:.cpp=.o)
 
-# Quelldateien und Header-Dateien
-SRCS = main.cpp
-DEPS = redBlackTree.hpp fileProcessor.hpp fileWriter.hpp
-
-# Ziel-Binärdatei
+# Standard Build
 all: $(TARGET)
 
-# Kompilierungsregel für das Hauptprogramm
-$(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o $(TARGET)
+# Erstelle das Hauptprogramm
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
 
-# Clean target, um alle erstellten Dateien zu entfernen
-.PHONY: clean
+# Kompiliere Objektdateien
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean-up
 clean:
-	-rm -f $(TARGET) *.o
+	rm -f $(OBJECTS) $(TARGET)
+
+# Phony Targets
+.PHONY: all clean
